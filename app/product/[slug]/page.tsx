@@ -6,7 +6,7 @@ import { client } from '@/app/lib/sanity';
 import { Button } from '@/components/ui/button';
 import { Star, Truck } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React from 'react'
 
 
 async function getData(slug : string) {
