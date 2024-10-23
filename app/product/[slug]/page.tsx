@@ -1,10 +1,13 @@
+import AddtoCart from '@/app/components/AddtoCart';
+import Checkout from '@/app/components/Checkout';
 import ImageGallary from '@/app/components/ImageGallary';
 import { fullProduct } from '@/app/interface';
 import { client } from '@/app/lib/sanity';
 import { Button } from '@/components/ui/button';
 import { Star, Truck } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react'
+
 
 async function getData(slug : string) {
     const query = `*[_type == "product" && slug.current == "${slug}"][0]
@@ -15,12 +18,15 @@ async function getData(slug : string) {
         name,
         description,
         "slug" : slug.current,
-        "categoryName" : category->name
+        "categoryName" : category->name,
+        price_id
       
     }`;
     const data = await client.fetch(query);
-    console.log(data);
-    console.log("in fun");
+    // console.log(data);
+    // console.log("in fun"+ data.size);
+    // console.log(data.price_id +" what is prize id of item")
+
     return data;
 }
 
@@ -32,7 +38,19 @@ export default async function ProductPage(
     }
 ) {
 
+    // const handleSizeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     // Remove the active class from all buttons
+    //     const buttons = document.querySelectorAll('.size-button');
+    //     buttons.forEach(button => {
+    //         button.classList.remove('bg-gray-200');
+    //     });
+
+    //     // Add the active class to the clicked button
+    //     event.currentTarget.classList.add('bg-gray-200');
+    // };
+
     const data : fullProduct = await getData(params.slug);
+    data.size = "XL"
 
         return (
 
@@ -88,42 +106,39 @@ export default async function ProductPage(
                             <br />
                             <div className='flex flex-col items-center justify-between gap-8 md:flex-row'>
                             <div className='flex h-12 w-full divide-x overflow-hidden rounded-lg border'>
-                            <Link
-                            href ="/ethenic" 
+                            <button 
                             className='flex w-1/3 items-center justify-center text-gray-500 transition duration-100 hover:bg-gray-100 active:bg-gray-200'>
-                                XS
-                            </Link>
-                            <Link 
-                            href ="/casual" 
+                            XS
+                            </button>
+                            <button 
                             className='flex w-1/3 items-center justify-center text-gray-500 transition duration-100 hover:bg-gray-100 active:bg-gray-200'> 
                             S
-                            </Link>
-                            <Link 
-                            href ="/indo-western" 
+                            </button>
+                            <button 
                             className='flex w-1/3 items-center justify-center text-gray-500 transition duration-100 hover:bg-gray-100 active:bg-gray-200'> 
                             M
-                            </Link>
-                            <Link 
-                            href ="/night-wear" 
+                            </button>
+                            <button 
                             className='flex w-1/3 items-center justify-center text-gray-500 transition duration-100 hover:bg-gray-100 active:bg-gray-200'> 
                             L
-                            </Link>
-                            <Link 
-                            href ="/night-wear" 
+                            </button>
+                            <button 
                             className='flex w-1/3 items-center justify-center text-gray-500 transition duration-100 hover:bg-gray-100 active:bg-gray-200'> 
                             XL
-                            </Link>
-                            <Link 
-                            href ="/night-wear" 
+                            </button>
+                            <button 
                             className='flex w-1/3 items-center justify-center text-gray-500 transition duration-100 hover:bg-gray-100 active:bg-gray-200'> 
                             XXL
-                            </Link>
+                            </button>
                             </div>
                         </div>
 
                         <div className='flex gap-2.5 mt-8'>
-                            <Button>Add to Cart</Button>
-                            <Button variant={"secondary"}>Checkout</Button>
+                        <AddtoCart currency="USD" description={data.description} 
+                        name={data.name} price={data.price} image={data.image[0]}  size={data.size} price_id ={data.price_id} ></AddtoCart>
+                        <Checkout currency="USD" description={data.description} 
+                        name={data.name} price={data.price} image={data.image[0]}  size={data.size} price_id ={data.price_id} ></Checkout>
+                        {/* <Button variant={"secondary"}>Checkout</Button> */}
                         </div>
 
                         <p className='mt-12'>{data.description}</p>
